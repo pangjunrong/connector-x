@@ -3,8 +3,7 @@ name: linux-aarch-test
 on:
     push:
       branches:
-        - prerelease
-        - release
+        - linux-aarch-test
 
 jobs:
     linux-aarch:
