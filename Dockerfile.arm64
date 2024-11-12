@@ -1,0 +1,21 @@
+# Use ARM64 base image
+FROM arm64v8/ubuntu:20.04
+
+# Install dependencies for ConnectorX build
+RUN apt-get update -y && apt-get install -y \
+    build-essential clang python3-dev libssl-dev libpq-dev \
+    libffi-dev libsodium-dev cmake git mysql-devel postgresql-devel freetds-devel krb5-libs clang-devel epel-release \
+    python3-pip python3-setuptools
+
+# Install Rust (needed for building ConnectorX)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain stable
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Set working directory
+WORKDIR /app
+
+# Expose port (if needed)
+EXPOSE 8000
+
+# Set default command
+CMD ["/bin/bash"]
