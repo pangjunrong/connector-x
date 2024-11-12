@@ -15,66 +15,43 @@ jobs:
           - name: Checkout Repository
             uses: actions/checkout@v4
   
-          - name: Setup QEMU
-            uses: docker/setup-qemu-action@v3
-            with:
-              platforms: arm64
+        #   - name: Setup QEMU
+        #     uses: docker/setup-qemu-action@v2
+        #     with:
+        #       platforms: aarch64
   
-          - name: Setup Buildx
-            uses: docker/setup-buildx-action@v2
+        #   - name: Setup Buildx
+        #     uses: docker/setup-buildx-action@v2
           
-          - name: Build Docker Image for ARM64
-            run: |
-              docker buildx create --use
-              docker buildx build --platform linux/arm64 --file Dockerfile.arm64 --build-arg PYTHON_VERSION=${{ matrix.python-version }} --tag connectorx-arm64 .
-      
-          - name: Build ConnectorX inside ARM64 Docker Container
-            run: |
-                docker run --rm connectorx-arm64 /bin/bash -c "
-                # Install required dependencies
-                RUN apt-get update -y && apt-get install -y \
-                build-essential clang python3-dev libssl-dev libpq-dev \
-                libffi-dev libsodium-dev cmake git \
-                libmysqlclient-dev freetds-dev libkrb5-dev \
-                python3-pip python3-setuptools
-                && \
-                # Install rust
-                curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh \
-                && \
-                # Install just
-                cargo install just \
-                && \
-                # Install poetry
-                pip3 install poetry \
-                && \
-                just bootstrap-python \
-                && \
-                just build-python-wheel \
-
-          - name: Setup Rust
-            uses: actions-rs/toolchain@v1
-            with:
-              toolchain: stable
-              components: rustfmt
-              target: aarch64-unknown-linux-gnu
-              default: true
+        #   - name: Setup Python
+        #     uses: actions/setup-python@v5
+        #     with:
+        #       python-version: ${{ matrix.python-version }}
   
-          - name: Setup Just
-            uses: extractions/setup-just@v2
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   - name: Setup Rust
+        #     uses: actions-rs/toolchain@v1
+        #     with:
+        #       toolchain: stable
+        #       components: rustfmt
+        #       target: aarch64-unknown-linux-gnu
+        #       default: true
   
-          - name: Install Tools
-            run: |
-              sudo apt-get update -y
-              sudo apt-get install -y mysql-client libpq-dev freetds-dev krb5-locales clang libkrb5-dev build-essential gcc
+        #   - name: Setup Just
+        #     uses: extractions/setup-just@v2
+        #     env:
+        #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+        #   - name: Install Tools
+        #     run: |
+        #       sudo apt-get update -y
+        #       sudo apt-get install -y mysql-client libpq-dev freetds-dev krb5-locales clang libkrb5-dev build-essential gcc
               
-          - name: Setup Poetry
-            uses: Gr1N/setup-poetry@v9
+        #   - name: Setup Poetry
+        #     uses: Gr1N/setup-poetry@v9
   
-          - name: Setup Project
-            run: |
-              just bootstrap-python
+        #   - name: Setup Project
+        #     run: |
+        #       just bootstrap-python
         
           - name: Verify OS and Architecture
             run: |
