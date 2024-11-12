@@ -43,10 +43,6 @@ url = "2"
 urlencoding = "2.1"
 uuid = "0.8"
 rayon = "1"
-tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono"], optional = true}
-
-[target.'cfg(not(all(target_arch = "aarch64", target_os = "linux")))'.dependencies]
-tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono", "integrated-auth-gssapi"], optional = true}
 
 [build-dependencies]
 built = {version = "0.5", features = ["chrono"]}
@@ -85,4 +81,6 @@ srcs = [
   "connectorx/src_bigquery",
   "connectorx/src_trino",
 ]
+
+[target.'cfg(not(all(target_arch = "aarch64", target_os = "linux")))'.features]
 integrated-auth-gssapi = ["connectorx/integrated-auth-gssapi"]
