@@ -10,7 +10,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            python-version: ["3.10", "3.11", "3.12", "3.13"]
+            python-version: ["3.10", "3.11", "3.12"]
         steps:
           - name: Checkout Repository
             uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
             with:
               rust-toolchain: stable
               maturin-version: v0.14.15
-              manylinux: 2_28
+              manylinux: 2_24
               command: build
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
             env:
@@ -76,7 +76,7 @@ jobs:
             with:
               rust-toolchain: stable
               maturin-version: v0.14.15
-              manylinux: 2_28
+              manylinux: 2_24
               command: build
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu --find-interpreter --release
             env:
