@@ -50,7 +50,6 @@ regex = {version = "1", optional = true}
 rusqlite = {version = "0.30.0", features = ["column_decltype", "chrono", "bundled"], optional = true}
 rust_decimal = {version = "1", features = ["db-postgres"], optional = true}
 rust_decimal_macros = {version = "1", optional = true}
-tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono", "integrated-auth-gssapi"], optional = true}
 tokio = {version = "1", features = ["rt", "rt-multi-thread", "net"], optional = true}
 tokio-util = {version = "0.6", optional = true}
 urlencoding = {version = "2.1", optional = true}
@@ -59,6 +58,11 @@ j4rs = {version = "0.15", optional = true}
 datafusion = {version = "31", optional = true}
 prusto = {version = "0.5.1", optional = true}
 serde = {version = "1", optional = true}
+
+[target.'cfg(all(target_arch = "arm64", target_os = "linux"))'.dependencies]
+tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono"], optional = true}
+[else]
+tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono", "integrated-auth-gssapi"], optional = true}
 
 [lib]
 crate-type = ["cdylib", "rlib"]
