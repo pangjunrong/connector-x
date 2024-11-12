@@ -8,10 +8,9 @@ on:
 jobs:
     linux-aarch:
         runs-on: ubuntu-latest
-        container: amazon/aws-glue-libs:glue_libs_4.0.0_image_01-arm64
         strategy:
           matrix:
-            python-version: ["3.10", "3.11", "3.12"]
+            python-version: ["3.10", "3.11", "3.12", "3.13"]
         steps:
           - name: Checkout Repository
             uses: actions/checkout@v4
@@ -64,7 +63,7 @@ jobs:
             with:
               rust-toolchain: stable
               maturin-version: v1.7.4
-              manylinux: auto
+              manylinux: 2_28
               command: build
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
             env:
@@ -79,7 +78,7 @@ jobs:
             with:
               rust-toolchain: stable
               maturin-version: v1.7.4
-              manylinux: auto
+              manylinux: 2_28
               command: build
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
             env:

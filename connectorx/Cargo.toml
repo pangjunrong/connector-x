@@ -61,7 +61,7 @@ serde = {version = "1", optional = true}
 tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono"], optional = true}
 
 
-[target.'cfg(not(all(target_arch = "aarch64", target_os = "linux")))'.dependencies]
+[target.'cfg(not(all(target_arch = "x86_64", target_os = "linux")))'.dependencies]
 tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono", "integrated-auth-gssapi"], optional = true}
 
 [lib]
@@ -107,7 +107,7 @@ src_trino = ["prusto", "uuid", "urlencoding", "rust_decimal", "tokio", "num-trai
 federation = ["j4rs"]
 fed_exec = ["datafusion", "tokio"]
 
-[target.'cfg(not(all(target_arch = "aarch64", target_os = "linux")))'.features]
+[target.'cfg(not(all(target_arch = "x86_64", target_os = "linux")))'.features]
 integrated-auth-gssapi = ["tiberius/integrated-auth-gssapi"]
 
 [package.metadata.docs.rs]

@@ -82,5 +82,5 @@ srcs = [
   "connectorx/src_trino",
 ]
 
-[target.'cfg(not(all(target_arch = "aarch64", target_os = "linux")))'.features]
+[target.'cfg(not(all(target_arch = "x86_64", target_os = "linux")))'.features]
 integrated-auth-gssapi = ["connectorx/integrated-auth-gssapi"]
