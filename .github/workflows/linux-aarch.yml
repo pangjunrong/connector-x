@@ -52,7 +52,12 @@ jobs:
           - name: Setup Project
             run: |
               just bootstrap-python
-              
+        
+          - name: Verify OS and Architecture
+            run: |
+                echo "OS: $(uname -s)"
+                echo "Architecture: $(uname -m)"
+                
           - name: Build Wheel
             uses: PyO3/maturin-action@v1
             with:
