@@ -26,7 +26,7 @@ jobs:
           - name: Build Docker Image for ARM64
             run: |
               docker buildx create --use
-              docker buildx build --platform linux/arm64 --file Dockerfile.arm64 --tag connectorx-arm64 .
+              docker buildx build --platform linux/arm64 --file Dockerfile.arm64 --build-arg PYTHON_VERSION=${{ matrix.python-version }} --tag connectorx-arm64 .
       
           - name: Build ConnectorX inside ARM64 Docker Container
             run: |
