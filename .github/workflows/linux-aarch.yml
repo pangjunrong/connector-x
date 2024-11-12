@@ -32,10 +32,11 @@ jobs:
             run: |
                 docker run --rm connectorx-arm64 /bin/bash -c "
                 # Install required dependencies
-                apt-get update -y && apt-get install -y \
+                RUN apt-get update -y && apt-get install -y \
                 build-essential clang python3-dev libssl-dev libpq-dev \
-                libffi-dev libsodium-dev cmake git mysql-devel postgresql-devel freetds-devel krb5-libs clang-devel epel-release \
-                python3-pip python3-setuptools \
+                libffi-dev libsodium-dev cmake git \
+                libmysqlclient-dev freetds-dev libkrb5-dev \
+                python3-pip python3-setuptools
                 && \
                 # Install rust
                 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh \

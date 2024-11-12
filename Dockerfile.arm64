@@ -4,7 +4,8 @@ FROM arm64v8/ubuntu:20.04
 # Install dependencies for ConnectorX build
 RUN apt-get update -y && apt-get install -y \
     build-essential clang python3-dev libssl-dev libpq-dev \
-    libffi-dev libsodium-dev cmake git mysql-devel postgresql-devel freetds-devel krb5-libs clang-devel epel-release \
+    libffi-dev libsodium-dev cmake git \
+    libmysqlclient-dev freetds-dev libkrb5-dev \
     python3-pip python3-setuptools
 
 # Install Rust (needed for building ConnectorX)
