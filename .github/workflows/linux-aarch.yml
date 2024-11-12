@@ -63,7 +63,7 @@ jobs:
               maturin-version: v0.14.15
               manylinux: 2_28
               command: build
-              args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i --find-interpreter --release
+              args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu --find-interpreter --release
             env:
               SQLITE3_STATIC: 1
   
