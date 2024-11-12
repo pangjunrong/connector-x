@@ -8,6 +8,7 @@ on:
 jobs:
     linux-aarch:
         runs-on: ubuntu-latest
+        container: amazon/aws-glue-libs:glue_libs_4.0.0_image_01-arm64
         strategy:
           matrix:
             python-version: ["3.10", "3.11", "3.12"]
@@ -62,8 +63,8 @@ jobs:
             uses: PyO3/maturin-action@v1
             with:
               rust-toolchain: stable
-              maturin-version: v0.14.15
-              manylinux: 2_24
+              maturin-version: v1.7.4
+              manylinux: auto
               command: build
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
             env:
@@ -77,8 +78,8 @@ jobs:
             uses: PyO3/maturin-action@v1
             with:
               rust-toolchain: stable
-              maturin-version: v0.14.15
-              manylinux: 2_24
+              maturin-version: v1.7.4
+              manylinux: auto
               command: build
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
             env:
