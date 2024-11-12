@@ -58,8 +58,6 @@ j4rs = {version = "0.15", optional = true}
 datafusion = {version = "31", optional = true}
 prusto = {version = "0.5.1", optional = true}
 serde = {version = "1", optional = true}
-
-[target.'cfg(all(target_arch = "aarch64", target_os = "linux"))'.dependencies]
 tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono"], optional = true}
 
 [target.'cfg(not(all(target_arch = "aarch64", target_os = "linux")))'.dependencies]
