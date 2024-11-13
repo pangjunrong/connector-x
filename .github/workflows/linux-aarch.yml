@@ -8,7 +8,7 @@ on:
 jobs:
     linux-aarch:
         runs-on: ubuntu-latest
-        container: arm64v8/python
+        container: arm64v8/python:${{ matrix.python-version }}
         strategy:
           matrix:
             python-version: ["3.10", "3.11", "3.12", "3.13"]
