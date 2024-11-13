@@ -58,7 +58,7 @@ j4rs = {version = "0.15", optional = true}
 datafusion = {version = "31", optional = true}
 prusto = {version = "0.5.1", optional = true}
 serde = {version = "1", optional = true}
-tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono", "integrated-auth-gssapi"], optional = true}
+tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono"], optional = true}
 
 [lib]
 crate-type = ["cdylib", "rlib"]
