@@ -66,11 +66,17 @@ jobs:
               manylinux: 2_28
               command: build
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
-              before-script-linux: sudo apt-get install -y libkrb5-dev libc6-dev libssl-dev clang gcc-multilib build-essential pkg-config && pkg-config --libs krb5
+              before-script-linux: |
+                sudo dpkg --add-architecture arm64
+                sudo apt-get install libkrb5-dev:arm64 libssl-dev:arm64 clang:arm64 gcc-8-aarch64-linux-gnu g++-aarch64-linux-gnu build-essential:arm64 pkg-config:arm64
+                sudo apt-get install -y libkrb5-dev libc6-dev libssl-dev clang gcc-multilib build-essential pkg-config
+                pkg-config --libs krb5
               sccache: true
             env:
               SQLITE3_STATIC: 1
               LIBRARY_PATH: /usr/aarch64-unknown-linux-gnu/lib:$LIBRARY_PATH
+              LD_LIBRARY_PATH: /usr/aarch64-linux-gnu/lib:$LD_LIBRARY_PATH
+              PKG_CONFIG_PATH: /usr/aarch64-linux-gnu/lib/pkgconfig:$PKG_CONFIG_PATH
   
           - name: Copy J4RS Dependencies
             run: |
