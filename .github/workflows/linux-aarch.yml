@@ -70,6 +70,7 @@ jobs:
               sccache: true
             env:
               SQLITE3_STATIC: 1
+              RUSTFLAGS: "-L /usr/lib/aarch64-linux-gnu -I /usr/include"
   
           - name: Copy J4RS Dependencies
             run: |
@@ -87,6 +88,7 @@ jobs:
               sccache: true
             env:
               SQLITE3_STATIC: 1
+              RUSTFLAGS: "-L /usr/lib/aarch64-linux-gnu -I /usr/include"
             
           - name: Upload Artifact
             uses: actions/upload-artifact@v4
