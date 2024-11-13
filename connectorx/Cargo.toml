@@ -60,7 +60,7 @@ prusto = {version = "0.5.1", optional = true}
 serde = {version = "1", optional = true}
 tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono"], optional = true}
 
-[target.'cfg(all(target_arch = "x86_64", target_os = "linux"))'.build-dependencies]
+[target.'cfg(not(all(target_arch = "x86_64", target_os = "linux")))'.dependencies]
 tiberius = { version = "0.7.3", features = ["rust_decimal", "chrono"], optional = true }
 
 [lib]
