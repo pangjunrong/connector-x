@@ -70,6 +70,7 @@ jobs:
               sccache: true
             env:
               SQLITE3_STATIC: 1
+              LIBRARY_PATH: /usr/aarch64-unknown-linux-gnu/lib:$LIBRARY_PATH
   
           - name: Copy J4RS Dependencies
             run: |
@@ -87,6 +88,7 @@ jobs:
               sccache: true
             env:
               SQLITE3_STATIC: 1
+              LIBRARY_PATH: /usr/aarch64-unknown-linux-gnu/lib:$LIBRARY_PATH
             
           - name: Upload Artifact
             uses: actions/upload-artifact@v4

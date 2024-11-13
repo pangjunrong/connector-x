@@ -12,3 +12,7 @@ rustflags = [
 
 [target.aarch64-unknown-linux-gnu]
 linker = "aarch64-linux-gnu-gcc"
+rustflags = [
+  "-L", "/usr/aarch64-unknown-linux-gnu/lib",
+  "-l", "gssapi_krb5"
+]
