@@ -14,14 +14,6 @@ jobs:
         steps:
           - name: Checkout Repository
             uses: actions/checkout@v4
-  
-          - name: Setup QEMU
-            uses: docker/setup-qemu-action@v2
-            with:
-              platforms: aarch64
-  
-          - name: Setup Buildx
-            uses: docker/setup-buildx-action@v2
           
         #   - name: Setup Python
         #     uses: actions/setup-python@v5
