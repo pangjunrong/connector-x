@@ -8,7 +8,6 @@ on:
 jobs:
     linux-aarch:
         runs-on: ubuntu-latest
-        container: arm64v8/python:${{ matrix.python-version }}
         strategy:
           matrix:
             python-version: ["3.10", "3.11", "3.12", "3.13"]
@@ -29,30 +28,30 @@ jobs:
         #     with:
         #       python-version: ${{ matrix.python-version }}
   
-          - name: Setup Rust
-            uses: actions-rs/toolchain@v1
-            with:
-              toolchain: stable
-              components: rustfmt
-              target: aarch64-unknown-linux-gnu
-              default: true
+        #   - name: Setup Rust
+        #     uses: actions-rs/toolchain@v1
+        #     with:
+        #       toolchain: stable
+        #       components: rustfmt
+        #       target: aarch64-unknown-linux-gnu
+        #       default: true
   
-          - name: Setup Just
-            uses: extractions/setup-just@v2
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   - name: Setup Just
+        #     uses: extractions/setup-just@v2
+        #     env:
+        #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
-          - name: Install Tools
-            run: |
-              sudo apt-get update -y
-              sudo apt-get install -y mysql-client libpq-dev freetds-dev krb5-locales clang libkrb5-dev build-essential gcc-multilib libc6-dev libssl-dev build-essential pkg-config
+        #   - name: Install Tools
+        #     run: |
+        #       sudo apt-get update -y
+        #       sudo apt-get install -y mysql-client libpq-dev freetds-dev krb5-locales clang libkrb5-dev build-essential gcc
               
-          - name: Setup Poetry
-            uses: Gr1N/setup-poetry@v9
+        #   - name: Setup Poetry
+        #     uses: Gr1N/setup-poetry@v9
   
-          - name: Setup Project
-            run: |
-              just bootstrap-python
+        #   - name: Setup Project
+        #     run: |
+        #       just bootstrap-python
         
           - name: Verify OS and Architecture
             run: |
@@ -64,20 +63,19 @@ jobs:
             with:
               rust-toolchain: stable
               maturin-version: v1.7.4
-              container: off
+              manylinux: 2_28
               command: build
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
-            #   before-script-linux: |
-            #     sudo dpkg --add-architecture arm64
-            #     sudo apt-get install libkrb5-dev:arm64 libssl-dev:arm64 clang:arm64
-            #     sudo apt-get install -y libkrb5-dev libc6-dev libssl-dev clang gcc-multilib build-essential pkg-config
-            #     pkg-config --libs krb5
+              before-script-linux: |
+                sudo apt-get install -y libkrb5-dev libc6-dev libssl-dev clang gcc-multilib build-essential pkg-config
+                pkg-config --libs krb5
               sccache: true
             env:
               SQLITE3_STATIC: 1
-            #   LIBRARY_PATH: /usr/aarch64-unknown-linux-gnu/lib:$LIBRARY_PATH
-            #   LD_LIBRARY_PATH: /usr/aarch64-linux-gnu/lib:$LD_LIBRARY_PATH
-            #   PKG_CONFIG_PATH: /usr/aarch64-linux-gnu/lib/pkgconfig:$PKG_CONFIG_PATH
+              LIBRARY_PATH: /usr/aarch64-unknown-linux-gnu/lib:$LIBRARY_PATH
+              LD_LIBRARY_PATH: /usr/aarch64-linux-gnu/lib:$LD_LIBRARY_PATH
+              PKG_CONFIG_PATH: /usr/aarch64-linux-gnu/lib/pkgconfig:$PKG_CONFIG_PATH
+
   
           - name: Copy J4RS Dependencies
             run: |
@@ -91,11 +89,14 @@ jobs:
               manylinux: 2_28
               command: build
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
-              before-script-linux: sudo apt-get install -y libkrb5-dev libc6-dev libssl-dev clang gcc-multilib build-essential pkg-config
-              sccache: true
+              before-script-linux: |
+                sudo apt-get install -y libkrb5-dev libc6-dev libssl-dev clang gcc-multilib build-essential pkg-config
+                pkg-config --libs krb5              sccache: true
             env:
               SQLITE3_STATIC: 1
               LIBRARY_PATH: /usr/aarch64-unknown-linux-gnu/lib:$LIBRARY_PATH
+              LD_LIBRARY_PATH: /usr/aarch64-linux-gnu/lib:$LD_LIBRARY_PATH
+              PKG_CONFIG_PATH: /usr/aarch64-linux-gnu/lib/pkgconfig:$PKG_CONFIG_PATH
             
           - name: Upload Artifact
             uses: actions/upload-artifact@v4
