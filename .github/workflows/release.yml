@@ -97,81 +97,52 @@ jobs:
           path: connectorx-python/target/wheels/*.whl
 
   linux-aarch:
-      runs-on: ubuntu-latest
-      strategy:
-        matrix:
-          python-version: ["3.10", "3.11", "3.12", "3.13"]
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+    
+      - name: Verify OS and Architecture
+        run: |
+            echo "OS: $(uname -s)"
+            echo "Architecture: $(uname -m)"
 
-        - name: Setup QEMU
-          uses: docker/setup-qemu-action@v2
-          with:
-            platforms: aarch64
+      - name: Build Wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          rust-toolchain: stable
+          maturin-version: v1.7.4
+          manylinux: 2_28
+          command: build
+          args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
+          sccache: true
+        env:
+          SQLITE3_STATIC: 1
 
-        - name: Setup Buildx
-          uses: docker/setup-buildx-action@v2
-        
-        - name: Setup Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: ${{ matrix.python-version }}
-
-        - name: Setup Rust
-          uses: actions-rs/toolchain@v1
-          with:
-            toolchain: stable
-            components: rustfmt
-            target: aarch64-unknown-linux-gnu
-            default: true
-
-        - name: Setup Just
-          uses: extractions/setup-just@v2
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-        - name: Install Tools
-          run: |
-            sudo apt-get update -y
-            sudo apt-get install -y mysql-client libpq-dev freetds-dev krb5-locales clang libkrb5-dev build-essential gcc
-            
-        - name: Setup Poetry
-          uses: Gr1N/setup-poetry@v9
-
-        - name: Setup Project
-          run: |
-            just bootstrap-python
-        - name: Build Wheel
-          uses: PyO3/maturin-action@v1
-          with:
-            rust-toolchain: stable
-            maturin-version: v0.14.15
-            manylinux: 2_28
-            command: build
-            args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
-          env:
-            SQLITE3_STATIC: 1
-
-        - name: Copy J4RS Dependencies
-          run: |
-            cp -rf connectorx-python/target/aarch64-unknown-linux-gnu/release/jassets connectorx-python/connectorx/dependencies
-        - name: Rebuild Wheel
-          uses: PyO3/maturin-action@v1
-          with:
-            rust-toolchain: stable
-            maturin-version: v0.14.15
-            manylinux: 2_28
-            command: build
-            args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
-          env:
-            SQLITE3_STATIC: 1
+      - name: Copy J4RS Dependencies
+        run: |
+          cp -rf connectorx-python/target/aarch64-unknown-linux-gnu/release/jassets connectorx-python/connectorx/dependencies
           
-        - name: Upload Artifact
-          uses: actions/upload-artifact@v4
-          with:
-            name: "linux-arm-${{ matrix.python-version }}"
-            path: connectorx-python/target/wheels/*.whl
+      - name: Rebuild Wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          rust-toolchain: stable
+          maturin-version: v1.7.4
+          manylinux: 2_28
+          command: build
+          args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
+          sccache: true
+        env:
+          SQLITE3_STATIC: 1
+        
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "linux-arm-${{ matrix.python-version }}"
+          path: connectorx-python/target/wheels/*.whl
             
   win-and-mac:
     runs-on: ${{ matrix.os }}
@@ -348,20 +319,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs: [linux-aarch]
     strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
-        os: [ubuntu-latest]
+        matrix:
+            python-version: ["3.10", "3.11", "3.12", "3.13"]
+            os: [ubuntu-latest]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Set up QEMU for ARM64 emulation to allow ARM64 container compatibility on x86_64 runners
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v2
         with:
           platforms: linux/arm64
 
-      # Set up Docker Buildx with ARM support, which is necessary for building and running ARM containers on x86_64
       - name: Setup Buildx
         uses: docker/setup-buildx-action@v2
         with:
@@ -377,12 +346,14 @@ jobs:
         with:
           name: "linux-arm-${{ matrix.python-version }}"
 
-      # Run the tests in an ARM64-compatible container
       - name: Run ARM64-Compatible Python Container
         run: |
           docker run --rm -v "$(pwd):/app" -w /app --platform linux/arm64 arm64v8/python:${{ matrix.python-version }} /bin/bash -c "
-            pip install *.whl &&
-            python -c 'import connectorx'"
+          echo "OS: $(uname -s)" &&
+          echo "Architecture: $(uname -m)" &&
+          pip install *.whl &&
+          python -c 'import connectorx'"
+
             
   # upload:
   #   runs-on: ubuntu-latest
