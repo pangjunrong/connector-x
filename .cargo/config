@@ -9,3 +9,6 @@ rustflags = [
   "-C", "link-arg=-undefined",
   "-C", "link-arg=dynamic_lookup",
 ]
+
+[target.aarch64-unknown-linux-gnu.tiberius]
+features = ["rust_decimal", "chrono", "integrated-auth-gssapi"]
