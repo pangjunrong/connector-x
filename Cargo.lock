@@ -461,19 +461,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "asynchronous-codec"
-version = "0.6.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4057f2c32adbb2fc158e22fb38433c8e9bbf76b75a4732c7c0cbaf695fb65568"
-dependencies = [
- "bytes",
- "futures-sink",
- "futures-util",
- "memchr",
- "pin-project-lite",
-]
-
-[[package]]
 name = "atoi"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -555,7 +542,7 @@ dependencies = [
  "bb8",
  "futures",
  "thiserror",
- "tiberius 0.7.3",
+ "tiberius",
  "tokio",
  "tokio-util 0.6.10",
 ]
@@ -919,12 +906,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "connection-string"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "510ca239cf13b7f8d16a2b48f263de7b4f8c566f0af58d901031473c76afb1e3"
-
-[[package]]
 name = "connectorx"
 version = "0.4.0"
 dependencies = [
@@ -974,8 +955,7 @@ dependencies = [
  "serde_json",
  "sqlparser 0.37.0",
  "thiserror",
- "tiberius 0.12.3",
- "tiberius 0.7.3",
+ "tiberius",
  "tokio",
  "tokio-util 0.6.10",
  "url",
@@ -3927,12 +3907,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "be91bcc43e73799dc46a6c194a55e7aae1d86cc867c860fd4a436019af21bd8c"
 
 [[package]]
-name = "pretty-hex"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c6fa0831dd7cc608c38a5e323422a0077678fa5744aa2be4ad91c4ece8eec8d5"
-
-[[package]]
 name = "proc-macro-crate"
 version = "3.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5122,54 +5096,28 @@ checksum = "833311bc8e26e96c73ad1b5c1f488c588808c747a318905ec67e43d422ea2c08"
 dependencies = [
  "async-native-tls",
  "async-trait",
- "asynchronous-codec 0.5.0",
+ "asynchronous-codec",
  "byteorder",
  "bytes",
  "chrono",
- "connection-string 0.1.13",
+ "connection-string",
  "encoding",
  "enumflags2",
  "futures",
  "futures-sink",
  "futures-util",
+ "libgssapi",
  "num-traits",
  "once_cell",
  "opentls",
  "pin-project-lite",
- "pretty-hex 0.1.1",
+ "pretty-hex",
  "rust_decimal",
  "thiserror",
  "tokio",
  "tokio-util 0.6.10",
  "tracing",
  "uuid 0.8.2",
- "winauth",
-]
-
-[[package]]
-name = "tiberius"
-version = "0.12.3"
-source = "git+https://github.com/prisma/tiberius#51f0cbb3e430db74ba0ea4830b236e89f1b1e03f"
-dependencies = [
- "async-native-tls",
- "async-trait",
- "asynchronous-codec 0.6.2",
- "byteorder",
- "bytes",
- "chrono",
- "connection-string 0.2.0",
- "encoding_rs",
- "enumflags2",
- "futures-util",
- "libgssapi",
- "num-traits",
- "once_cell",
- "pin-project-lite",
- "pretty-hex 0.3.0",
- "rust_decimal",
- "thiserror",
- "tracing",
- "uuid 1.11.0",
  "winauth",
 ]
 
