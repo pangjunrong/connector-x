@@ -61,7 +61,7 @@ serde = {version = "1", optional = true}
 tiberius = {version = "0.7.3", features = ["rust_decimal", "chrono"], optional = true}
 
 [target.'cfg(not(all(target_arch = "aarch64", target_os = "linux")))'.dependencies]
-tiberius = { version = "0.7.3", features = ["rust_decimal", "chrono", "integrated-auth-gssapi"], optional = true }
+tiberius_sysauth = { version = "0.7.3", features = ["rust_decimal", "chrono", "integrated-auth-gssapi"], optional = true, package = "tiberius" }
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -105,7 +105,7 @@ src_sqlite = ["rusqlite", "r2d2_sqlite", "fallible-streaming-iterator", "r2d2", 
 src_trino = ["prusto", "uuid", "urlencoding", "rust_decimal", "tokio", "num-traits", "serde"]
 federation = ["j4rs"]
 fed_exec = ["datafusion", "tokio"]
-integrated-auth-gssapi = ["tiberius/integrated-auth-gssapi"]
+integrated-auth-gssapi = ["tiberius_sysauth/integrated-auth-gssapi"]
 
 [package.metadata.docs.rs]
 features = ["all"]

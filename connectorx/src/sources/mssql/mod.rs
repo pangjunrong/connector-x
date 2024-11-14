@@ -26,11 +26,15 @@ use rust_decimal::Decimal;
 use sqlparser::dialect::MsSqlDialect;
 use std::collections::HashMap;
 use std::sync::Arc;
-use tiberius::{AuthMethod, Config, EncryptionLevel, QueryItem, QueryStream, Row};
 use tokio::runtime::{Handle, Runtime};
 use url::Url;
 use urlencoding::decode;
 use uuid::Uuid;
+
+#[cfg(feature = "integrated-auth-gssapi")]
+use tiberius_sysauth::{AuthMethod, Config, EncryptionLevel, QueryItem, QueryStream, Row};
+#[cfg(not(feature = "integrated-auth-gssapi"))]
+use tiberius::{AuthMethod, Config, EncryptionLevel, QueryItem, QueryStream, Row};
 
 type Conn<'a> = PooledConnection<'a, ConnectionManager>;
 pub struct MsSQLSource {
