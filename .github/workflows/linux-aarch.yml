@@ -27,7 +27,7 @@ jobs:
               maturin-version: v1.7.4
               manylinux: 2_28
               command: build
-              args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
+              args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-musl -i python${{ matrix.python-version }} --release
               before-script-linux: |
                 echo "OS: $(uname -s)"
                 echo "Architecture: $(uname -m)"
@@ -37,7 +37,7 @@ jobs:
   
           - name: Copy J4RS Dependencies
             run: |
-              cp -rf connectorx-python/target/aarch64-unknown-linux-gnu/release/jassets connectorx-python/connectorx/dependencies
+              cp -rf connectorx-python/target/aarch64-unknown-linux-musl/release/jassets connectorx-python/connectorx/dependencies
               
           - name: Rebuild Wheel
             uses: PyO3/maturin-action@v1
@@ -46,7 +46,7 @@ jobs:
               maturin-version: v1.7.4
               manylinux: 2_28
               command: build
-              args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-gnu -i python${{ matrix.python-version }} --release
+              args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-musl -i python${{ matrix.python-version }} --release
               sccache: true
             env:
               SQLITE3_STATIC: 1
@@ -67,7 +67,8 @@ jobs:
         steps:
           - name: Checkout Repository
             uses: actions/checkout@v4
-        # Set up QEMU for ARM64 emulation to allow ARM64 container compatibility on x86_64 runners
+            
+          # Set up QEMU for ARM64 emulation to allow ARM64 container compatibility on x86_64 runners
           - name: Setup QEMU
             uses: docker/setup-qemu-action@v2
             with:
