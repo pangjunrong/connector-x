@@ -102,7 +102,7 @@ src_sqlite = ["rusqlite", "r2d2_sqlite", "fallible-streaming-iterator", "r2d2", 
 src_trino = ["prusto", "uuid", "urlencoding", "rust_decimal", "tokio", "num-traits", "serde"]
 federation = ["j4rs"]
 fed_exec = ["datafusion", "tokio"]
-integrated-auth-gssapi = ["tiberius_sysauth/integrated-auth-gssapi"]
+integrated-auth-gssapi = ["tiberius/integrated-auth-gssapi"]
 
 [package.metadata.docs.rs]
 features = ["all"]
