@@ -32,7 +32,6 @@ jobs:
                 python${{ matrix.python-version }} -m ensurepip --upgrade
                 echo "OS: $(uname -s)"
                 echo "Architecture: $(uname -m)"
-              sccache: true
             env:
               SQLITE3_STATIC: 1
   
@@ -48,7 +47,6 @@ jobs:
               manylinux: 2_28
               command: build
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-musl -i python${{ matrix.python-version }} --release
-              sccache: true
               before-script-linux:
                 python${{ matrix.python-version }} -m ensurepip --upgrade
             env:
