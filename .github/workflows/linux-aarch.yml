@@ -30,7 +30,7 @@ jobs:
               args: -m connectorx-python/Cargo.toml --target aarch64-unknown-linux-musl -i python${{ matrix.python-version }} --release
               before-script-linux: |
                 python${{ matrix.python-version }} -m ensurepip --upgrade
-                sudo apt-get install -y musl-tools gcc-aarch64-linux-gnu
+                apt-get install -y musl-tools gcc-aarch64-linux-gnu
                 echo "OS: $(uname -s)"
                 echo "Architecture: $(uname -m)"
             env:
