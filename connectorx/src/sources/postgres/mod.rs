@@ -1807,7 +1807,10 @@ impl<'r> Produce<'r, Option<NaiveDate>> for PostgresSimpleSourceParser {
             },
             SimpleQueryMessage::CommandComplete(c) => {
                 panic!("get command: {}", c);
-            }
+            },
+            SimpleQueryMessage::RowDescription(_) => {
+                None
+            },
             _ => {
                 panic!("what?");
             }
