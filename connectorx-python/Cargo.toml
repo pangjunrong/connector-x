@@ -28,7 +28,7 @@ log = "0.4"
 ndarray = "0.15"
 numpy = {version = "0.22", features = ["gil-refs"]}
 openssl = {version = "0.10", features = ["vendored"]}
-postgres = {version = "0.19.9", features = ["with-chrono-0_4", "with-uuid-1", "with-serde_json-1"]}
+postgres = {version = "0.19", features = ["with-chrono-0_4", "with-uuid-1", "with-serde_json-1"]}
 postgres-native-tls = {version = "0.5"}
 postgres-openssl = {version = "0.5.0"}
 pyo3 = {version = "0.22", default-features = false, features = ["macros", "gil-refs", "py-clone"]}
