@@ -26,11 +26,10 @@ use rust_decimal::Decimal;
 use sqlparser::dialect::MsSqlDialect;
 use std::collections::HashMap;
 use std::sync::Arc;
-use tiberius::{AuthMethod, Config, EncryptionLevel, QueryItem, QueryStream, Row};
+use tiberius::{AuthMethod, Config, EncryptionLevel, QueryItem, QueryStream, Row, Uuid};
 use tokio::runtime::{Handle, Runtime};
 use url::Url;
 use urlencoding::decode;
-use uuid::Uuid;
 
 type Conn<'a> = PooledConnection<'a, ConnectionManager>;
 pub struct MsSQLSource {
