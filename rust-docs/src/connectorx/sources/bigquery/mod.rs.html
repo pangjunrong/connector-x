@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `connectorx/src/sources/bigquery/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="connectorx" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `connectorx/src/sources/bigquery/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="connectorx" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.0 (4d91de4e4 2025-02-17)" data-channel="1.85.0" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../../../../static.files/storage-59e33391.js"></script><script defer src="../../../../static.files/src-script-56102188.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">connectorx/sources/bigquery/</div>mod.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1137,8 +1138,7 @@
 <a href="#1137" id="1137">1137</a>
 <a href="#1138" id="1138">1138</a>
 <a href="#1139" id="1139">1139</a>
-<a href="#1140" id="1140">1140</a>
-</pre></div><pre class="rust"><code><span class="doccomment">//! Source implementation for Google BigQuery
+<a href="#1140" id="1140">1140</a></pre></div><pre class="rust"><code><span class="doccomment">//! Source implementation for Google BigQuery
 
 </span><span class="kw">mod </span>errors;
 <span class="kw">mod </span>typesystem;
@@ -1157,6 +1157,7 @@
     model::{
         get_query_results_parameters::GetQueryResultsParameters,
         get_query_results_response::GetQueryResultsResponse, query_request::QueryRequest,
+        query_response::ResultSet,
     },
     Client,
 };
@@ -1201,7 +1202,7 @@
         <span class="kw">let </span>sa_key_path = url.path();
         <span class="kw">let </span>client = Arc::new(rt.block_on(
             gcp_bigquery_client::Client::from_service_account_key_file(sa_key_path),
-        ));
+        )<span class="question-mark">?</span>);
         <span class="kw">let </span>auth_data = std::fs::read_to_string(sa_key_path)<span class="question-mark">?</span>;
         <span class="kw">let </span>auth_json: serde_json::Value = serde_json::from_str(<span class="kw-2">&amp;</span>auth_data)<span class="question-mark">?</span>;
         <span class="kw">let </span>project_id = auth_json
@@ -1258,7 +1259,6 @@
                 QueryRequest::new(l1query.as_str()),
             ))<span class="question-mark">?</span>;
             <span class="kw">let </span>(names, types) = rs
-                .query_response()
                 .schema
                 .as_ref()
                 .ok_or_else(|| <span class="macro">anyhow!</span>(<span class="string">"TableSchema is none"</span>))<span class="question-mark">?
@@ -1285,9 +1285,9 @@
                 <span class="kw">let </span>cxq = CXQuery::Naked(q.clone());
                 <span class="kw">let </span>cquery = count_query(<span class="kw-2">&amp;</span>cxq, <span class="kw-2">&amp;</span>BigQueryDialect {})<span class="question-mark">?</span>;
                 <span class="kw">let </span>job = <span class="self">self</span>.client.job();
-                <span class="kw">let </span><span class="kw-2">mut </span>rs = <span class="self">self</span>.rt.block_on(
+                <span class="kw">let </span><span class="kw-2">mut </span>rs = ResultSet::new_from_query_response(<span class="self">self</span>.rt.block_on(
                     job.query(<span class="self">self</span>.project_id.as_str(), QueryRequest::new(cquery.as_str())),
-                )<span class="question-mark">?</span>;
+                )<span class="question-mark">?</span>);
                 rs.next_row();
                 <span class="kw">let </span>nrows = rs
                     .get_i64(<span class="number">0</span>)<span class="question-mark">?
@@ -1361,9 +1361,10 @@
     </span><span class="kw">fn </span>result_rows(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="kw">let </span>cquery = count_query(<span class="kw-2">&amp;</span><span class="self">self</span>.query, <span class="kw-2">&amp;</span>BigQueryDialect {})<span class="question-mark">?</span>;
         <span class="kw">let </span>job = <span class="self">self</span>.client.job();
-        <span class="kw">let </span><span class="kw-2">mut </span>rs = <span class="self">self
-            </span>.rt
-            .block_on(job.query(<span class="self">self</span>.project_id.as_str(), QueryRequest::new(cquery.as_str())))<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>rs =
+            ResultSet::new_from_query_response(<span class="self">self</span>.rt.block_on(
+                job.query(<span class="self">self</span>.project_id.as_str(), QueryRequest::new(cquery.as_str())),
+            )<span class="question-mark">?</span>);
         rs.next_row();
         <span class="kw">let </span>nrows = rs
             .get_i64(<span class="number">0</span>)<span class="question-mark">?
@@ -1379,7 +1380,6 @@
             QueryRequest::new(<span class="self">self</span>.query.as_str()),
         ))<span class="question-mark">?</span>;
         <span class="kw">let </span>job_info = qry
-            .query_response()
             .job_reference
             .as_ref()
             .ok_or_else(|| <span class="macro">anyhow!</span>(<span class="string">"job_reference is none"</span>))<span class="question-mark">?</span>;
