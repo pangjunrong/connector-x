@@ -1,0 +1,73 @@
+name: Test ARM Release
+
+on:
+    workflow_dispatch:
+    push:
+
+jobs:
+    test-arm:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v3
+              with:
+                platforms: arm64
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Test in ARM container
+              uses: docker/build-push-action@v5
+              with:
+                platforms: linux/arm64
+                push: false
+                pull: false
+                outputs: type=docker
+                load: true
+                build-args: |
+                    PYTHON_VERSION=3.10
+                file: |
+                    FROM ubuntu:22.04
+                    
+                    ARG PYTHON_VERSION
+                    
+                    RUN apt-get update && \
+                            apt-get install -y python${PYTHON_VERSION} \
+                            python3-pip \
+                            postgresql \
+                            postgresql-contrib \
+                            && rm -rf /var/lib/apt/lists/*
+                    
+                    RUN pip install connectorx==0.4.3a1 pandas
+                    
+                    USER postgres
+                    RUN service postgresql start && \
+                        psql -c "CREATE DATABASE testdb;" && \
+                        psql -d testdb -c "CREATE TABLE test (id INTEGER, name TEXT);" && \
+                        psql -d testdb -c "INSERT INTO test VALUES (1, 'test1'), (2, 'test2');"
+                    
+                    USER root
+                    COPY <<EOF /test_cx.py
+                    import connectorx as cx
+                    import pandas as pd
+                    
+                    print("ConnectorX version:", cx.__version__)
+                    df = cx.read_sql("postgresql://postgres@localhost/testdb", 
+                                   "SELECT * FROM test")
+                    print("Query result:")
+                    print(df)
+                    EOF
+                    
+                    # Add system info commands
+                    RUN echo "=== System Information ===" > /system_info.sh && \
+                        echo "Architecture: $(uname -m)" >> /system_info.sh && \
+                        echo "GLIBC version: $(ldd --version | head -n1)" >> /system_info.sh && \
+                        echo "OS Details: $(cat /etc/os-release | grep PRETTY_NAME)" >> /system_info.sh && \
+                        echo "Python version: $(python3 --version)" >> /system_info.sh && \
+                        chmod +x /system_info.sh
+                    
+                    CMD cat /system_info.sh && service postgresql start && python3 /test_cx.py
+
+            - name: Run container and show logs
+              run: |
+                docker run $(docker images -q | head -n 1)
