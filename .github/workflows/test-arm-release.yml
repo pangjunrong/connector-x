@@ -46,7 +46,6 @@ jobs:
                 import pandas as pd
 
                 df = cx.read_sql("postgresql://postgres:postgres@localhost/testdb", 
-                df = cx.read_sql("postgresql://postgres@localhost/testdb", 
                                "SELECT * FROM test")
                 print("Query result:")
                 print(df)
